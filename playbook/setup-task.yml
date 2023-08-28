@@ -1,0 +1,36 @@
+---
+
+- name: task 1 for cloudru
+  hosts: experimental
+  become: true
+  vars_files:
+    - 'data.yml'
+
+  tasks:
+    - name: create new user
+      ansible.builtin.user:
+        name: '{{ username }}'
+        password: '{{ passwd }}'
+    - name: add user's pub key
+      authorized_key:
+        user: '{{ username }}'
+        state: present
+        key: '{{ key }}'
+        path: /home/{{ username }}/.ssh/authorized_keys
+    - name: disable root auth and passwd auth
+      shell:
+          cmd: | 
+            cat <<EOF > /etc/ssh/sshd_config.d/00-setup.conf
+            PermitRootLogin no
+            PasswordAuthentication no
+            PubkeyAuthentication yes
+            ChallengeResponseAuthentication no
+            EOF
+      notify:
+        - restart ssh
+
+  handlers:
+    - name: restart ssh
+      service:
+        name: sshd
+        state: restarted
