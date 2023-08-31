@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-task-ns
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-task
+  namespace: test-task-ns
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: test-app
+  template:
+    metadata:
+      labels:
+        app: test-app
+    spec:
+      containers:
+      - name: test-container
+        image: irameis/cloudrudevopscamp:test-task0
+        ports:
+        - name: http
+          containerPort: 8000
+          protocol: TCP
+        env:
+          - name: AUTHOR
+            value: IraMeis
+          - name: UUID
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.uid
+        readinessProbe:
+          httpGet:
+            path: /hostname
+            port: http
+          initialDelaySeconds: 3
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /id
+            port: http
+          initialDelaySeconds: 3
+          periodSeconds: 5
+        resources:
+          requests:
+            cpu: "20m"
+            memory: "50Mi"
+          limits:
+            cpu: "200m"
+            memory: "100Mi"
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-task
+  namespace: test-task-ns
+spec:
+  selector:
+    app: test-app
+  ports:
+  - name: http
+    port: 8000
+    protocol: TCP
+    targetPort: http
+  type: ClusterIP

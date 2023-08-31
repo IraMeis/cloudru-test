@@ -7,5 +7,10 @@
 
 ### Задание 2
 #### 2.1 App & Dockerfile  
-Приложение: Flask, json over http.  
+Приложение: Flask, json&html over http.  
 Dockerfile: multistage, alpine в качестве базы, вначале трансляция в Си и компиляция, на выходе свежий alpine с объектным файлом - 17.8MB.
+
+#### 2.2 K8s manifest
+Проверялось локально с minikube/kvm. Ограничения на память ставились по анализу `kubectl top pods`.
+
+#### 2.3 Helm
