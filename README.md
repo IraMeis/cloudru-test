@@ -13,4 +13,5 @@ Dockerfile: multistage, alpine в качестве базы, вначале тр
 #### 2.2 K8s manifest
 Проверялось локально с minikube/kvm. Ограничения на память ставились по анализу `kubectl top pods`.
 
-#### 2.3 Helm
+#### 2.3 Helm chart
+Отредактированный `helm create test-task`. Namespace создавался отдельно через kubectl.

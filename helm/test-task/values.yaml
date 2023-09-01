@@ -1,0 +1,26 @@
+# Default values for test-task.
+
+replicaCount: 3
+
+author: IraMeis
+
+image:
+  repository: irameis/cloudrudevopscamp
+  tag: test-task0
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8000
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 100Mi
+  requests:
+    cpu: 20m
+    memory: 50Mi
+
+nameOverride: ""
+
+fullnameOverride: ""
